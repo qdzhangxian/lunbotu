@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		ul{
+			list-style: none;
+		}
+		.box{
+			width: 830px;
+			height: 130px;
+			border: 10px solid #000;
+			margin: 100px auto;
+			position: relative;
+			overflow: hidden;
+		}
+		.m_unit{
+			width: 4000px;
+			height: 130px;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		.m_unit li{
+			float: left;
+			width: 200px;
+			height: 130px;
+			margin-right: 10px;
+		}
+	</style>
+</head>
+<body>
+	<div class="box" id="scroll">
+		<ul class="m_unit" id="m_unit">
+			<li><img src="images/shuzi/0.png" alt="" /></li>
+			<li><img src="images/shuzi/1.png" alt="" /></li>
+			<li><img src="images/shuzi/2.png" alt="" /></li>
+			<li><img src="images/shuzi/3.png" alt="" /></li>
+			<li><img src="images/shuzi/4.png" alt="" /></li>
+			<li><img src="images/shuzi/5.png" alt="" /></li>
+			<li><img src="images/shuzi/6.png" alt="" /></li>
+			<li><img src="images/shuzi/0.png" alt="" /></li>
+			<li><img src="images/shuzi/1.png" alt="" /></li>
+			<li><img src="images/shuzi/2.png" alt="" /></li>
+			<li><img src="images/shuzi/3.png" alt="" /></li>
+			<li><img src="images/shuzi/4.png" alt="" /></li>
+			<li><img src="images/shuzi/5.png" alt="" /></li>
+			<li><img src="images/shuzi/6.png" alt="" /></li>
+		</ul>
+	</div>
+	<script>
+		var mUnit = document.getElementById("m_unit");
+		var scroll = document.getElementById("scroll");
+
+		//定义信号量
+		var nowleft = 0;
+		var timer;
+		//开启定时器
+		timer = setInterval(move,50);
+		scroll.onmouseover = function(){
+			clearInterval(timer);
+		}
+		scroll.onmouseout = function(){
+			//设表先停
+			clearInterval(timer);
+			timer = setInterval(move,50);
+		}
+		function move(){
+			//元素要往左走，递减
+			nowleft -= 10;
+			//走到第二组图片的最左边，瞬间将ul拉回原点。
+			if(nowleft == -1470){
+				nowleft = 0;
+			}
+			mUnit.style.left = nowleft + "px";
+		}
+	</script>
+</body>
+</html>

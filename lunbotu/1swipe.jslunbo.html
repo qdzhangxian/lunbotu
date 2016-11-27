@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8"/>
+	<title>指滑轮播图</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" id="viewport" />
+	<style type="text/css">
+		.swipe {
+		  overflow: hidden;
+		  visibility: hidden;
+		  position: relative;
+		}
+		.swipe-wrap {
+		  overflow: hidden;
+		  position: relative;
+		}
+		.swipe-wrap > div {
+		  float:left;
+		  width:100%;
+		  position: relative;
+		}
+		.swipe-wrap > div img{
+			width: 100%;
+		}
+		.circles{
+			position: absolute;
+			bottom: 20px;
+			left: 0px;
+			width: 240px;
+			height: 20px;
+		}
+		.circles ol{
+			list-style: none;
+		}
+		.circles ol li{
+			float: left;
+			width: 20px;
+			height: 20px;
+			margin-right: 10px;
+			background-color: red;
+		}
+		.circles ol li.cur{
+			width: 50px;
+		}
+	</style>
+</head>
+<body>
+	<div id='slider' class='swipe'>
+		<div class='swipe-wrap'>
+		    <div><img src="images/1.jpg" alt=""></div>
+		    <div><img src="images/2.jpg" alt=""></div>
+		    <div><img src="images/3.jpg" alt=""></div>
+		    <div><img src="images/4.jpg" alt=""></div>
+		    <div><img src="images/5.jpg" alt=""></div>
+		</div>
+		<div class="circles">
+			<ol>
+				<li class="cur"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ol>
+		</div>
+	</div>
+
+	<div id='slider2' class='swipe'>
+		<div class='swipe-wrap'>
+		    <div><img src="images/1.jpg" alt=""></div>
+		    <div><img src="images/2.jpg" alt=""></div>
+		    <div><img src="images/3.jpg" alt=""></div>
+		    <div><img src="images/4.jpg" alt=""></div>
+		    <div><img src="images/5.jpg" alt=""></div>
+		</div>
+		<div class="circles">
+			<ol>
+				<li class="cur"></li>
+				<li></li>
+				<li></li>
+				<li></li>
+				<li></li>
+			</ol>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/swipe.js"></script>
+	<script type="text/javascript">
+		var circlelis = document.querySelectorAll(".circles li");
+		var slider = document.getElementById('slider');
+		window.mySwipe = Swipe(slider,{
+		  startSlide: 0,
+		  speed: 0,
+		  auto: 1000,
+		  continuous: true,
+		  disableScroll: false,
+		  stopPropagation: false,
+		  callback: function(index, elem) {
+		  		for(var i = 0 ; i < circlelis.length ; i++){
+		  			circlelis[i].className = "";
+		  		}
+		  		circlelis[index].className = "cur";
+		  },
+		  transitionEnd: function(index, elem) {}
+		});
+
+
+
+		var slider2 = document.getElementById('slider2');
+		window.mySwipe2 = Swipe(slider2,{
+		  startSlide: 0,
+		  speed: 0,
+		  auto: 0,
+		  continuous: true,
+		  disableScroll: false,
+		  stopPropagation: false,
+		  transitionEnd: function(index, elem) {}
+		});
+	</script>
+</body>
+</html>

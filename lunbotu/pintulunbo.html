@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.carousel{
+			width: 900px;
+			height: 540px;
+			border: 1px solid #000;
+			margin: 50px auto;
+			position: relative;
+		}
+		.carousel ul{
+			list-style: none;
+		}
+		.carousel ul li{
+			display: none;
+		}
+		.carousel ul li.cur{
+			display: block;
+		}
+		.btns a{
+			position: absolute;
+			width: 60px;
+			height: 60px;
+			top: 50%;
+			margin-top: -30px;
+			background-color: #000;
+			opacity: 0.8;
+			z-index: 999;
+		}
+		.btns a.leftBtn{
+			left: 20px;
+		}
+		.btns a.rightBtn{
+			right: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class="carousel">
+		<ul>
+			<li class="cur"><a href="#"><img src="images/aoyun/0.jpg" alt="" /></a></li>
+			<li><a href="#"><img src="images/aoyun/1.jpg" alt="" /></a></li>
+			<li><a href="#"><img src="images/aoyun/2.jpg" alt="" /></a></li>
+			<li><a href="#"><img src="images/aoyun/3.jpg" alt="" /></a></li>
+			<li><a href="#"><img src="images/aoyun/4.jpg" alt="" /></a></li>
+			<li><a href="#"><img src="images/aoyun/5.jpg" alt="" /></a></li>
+			<li><a href="#"><img src="images/aoyun/6.jpg" alt="" /></a></li>
+		</ul>
+		<div class="btns">
+			<a href="javascript:void(0);" class="leftBtn"></a>
+			<a href="javascript:void(0);" class="rightBtn"></a>
+		</div>
+		<div class="maoni"></div>
+	</div>
+
+	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript">
+
+		var idx = 0;
+
+		var lock = true;
+
+		$(".rightBtn").click(function(){
+			//函数截流
+			if(!lock){
+				return;
+			}
+
+			lock = false;
+
+			idx++;
+			if(idx > $("li").length - 1){
+				idx = 0;
+			}
+
+			//创建100个div
+			for(var i = 0 ; i < 100 ; i++){
+				$("<div></div>")
+				.css({
+					"width" : 90,
+					"height" : 54,
+					"position" : "absolute",
+					"top" : parseInt(i / 10) * 54,
+					"left" : i % 10 * 90,
+					"background-image" : "url(" + $("img").eq(idx).attr("src") + ")",
+					"background-position" : (-i % 10 * 90) + "px " + (-parseInt(i / 10) * 54) + "px",
+					"display" : "none"
+				})
+				.appendTo(".maoni");
+			}
+
+			//出现
+			$(".maoni div").each(function(){
+				$(this).delay(Math.random() * 600).fadeIn();
+
+				setTimeout(function(){
+					$(".maoni").empty();
+					$("li").eq(idx).addClass("cur").siblings().removeClass("cur");
+					//函数截流
+					lock = true;
+				},1200);
+			});
+		});
+	</script>
+</body>
+</html>

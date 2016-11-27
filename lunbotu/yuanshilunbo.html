@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>操作html</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}		
+	</style>
+	<script>
+		window.onload = function(){
+			//先获取元素
+			var leftBtn = document.getElementById("leftBtn");
+			var rightBtn = document.getElementById("rightBtn");
+			var image = document.getElementById("image");
+			//全局变量，信号量，可以传递
+			var index = 1;
+			//添加事件监听
+			rightBtn.onclick = function(){
+				index++;
+				if(index > 5){
+					index = 1;
+				}
+				change();
+			}
+			leftBtn.onclick = function(){
+				index--;
+				if(index < 1){
+					index = 5;
+				}
+				change();
+			}
+			function change(){
+				image.src = "images/lunbo/" + index + ".jpg";
+			}
+		}
+	</script>
+</head>
+<body>
+	<div class="box" id="box">
+		<input type="button" value="上一张" id="leftBtn" />
+		<img src="images/lunbo/1.jpg" alt="" width="400" id="image"/>
+		<input type="button" value="下一张" id="rightBtn" />
+	</div>
+</body>
+</html>

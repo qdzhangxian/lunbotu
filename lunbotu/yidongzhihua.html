@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>指滑轮播图</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" id="viewport" />
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.carousel{
+			position: relative;
+			width: 100%;
+			height: 100px;
+			margin: 0 auto;
+			overflow: hidden;
+			background: url(images/loading.gif) no-repeat center center;
+		}
+		.carousel ul{
+			list-style: none;
+			display: none;
+		}
+		.carousel ul li{
+			width: 100%;
+			position: absolute;
+		}
+		.carousel ul li img{
+			width: 100%;
+			vertical-align: middle;
+		}
+		.circlelist{
+			position: absolute;
+			bottom: 10px;
+			left: 50%;
+			width: 105px;
+			list-style: none;
+			margin-left: -52px;
+		}
+		.circlelist li{
+			border-radius: 8px;
+			float: left;
+			margin-right: 6px;
+			width: 12px;
+			height: 12px;
+			background-color: orange;
+			transition:all 0.3s ease 0s;
+		}
+		.circlelist li.cur{
+			width: 26px;
+		}
+		#carousel2{
+			width: 360px;
+		}
+		#carousel3{
+			width: 320px;
+		}
+	</style>
+</head>
+<body>
+	<div class="carousel" id="carousel">
+		<ul class="imageList">
+			<li><a href="#"><img src="images/0.jpg" alt=""></a></li>
+			<li><a href="#"><img src="images/1.jpg" alt=""></a></li>
+			<li><a href="#"><img src="images/2.jpg" alt=""></a></li>
+			<li><a href="#"><img src="images/3.jpg" alt=""></a></li>
+			<li><a href="#"><img src="images/4.jpg" alt=""></a></li>
+		</ul>
+		<ol class="circlelist">
+			<li class="cur"></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ol>
+	</div>
+	
+	<script type="text/javascript">
+		//手指轮播图类，构造函数
+		function TouchCarousel(id){
+			this.dom = document.getElementById(id);
+			this.imageList = this.dom.querySelector(".imageList");
+			this.lis = this.dom.querySelectorAll(".imageList li");
+			this.lislength = this.lis.length;
+			this.circlesLis = this.dom.querySelectorAll(".circlelist li");
+			this.images = this.dom.querySelectorAll("img");
+
+			//加载完毕计数
+			var count = 0;
+			var self = this;
+			for(var i = 0 ; i < this.images.length ; i++){
+				this.images[i].onload = function(){
+					count++;
+					if(count == self.images.length){
+
+						// 显示
+						self.imageList.style.display = "block";
+						//设置高度
+						self.dom.style.height = window.getComputedStyle(self.images[0])["height"];
+					}
+				}
+			}
+			
+			//轮播图的宽度，没有单位
+			this.width = parseInt(window.getComputedStyle(this.dom)["width"]);
+		
+			//信号量
+			this.nowidx = 0;
+
+			//绑定监听
+			this.dom.addEventListener("touchstart", function(event){
+				self.touchstarthandler(event);
+			}, true);
+
+			this.dom.addEventListener("touchmove", function(event){
+				self.touchmovehandler(event);
+			}, true);
+
+			this.dom.addEventListener("touchend", function(event){
+				self.touchendhandler(event);
+			}, true);
+
+			//当页面尺寸调整的时候，重新计算宽度
+			// window.addEventListener("resize",function(){
+			// 	clearInterval(self.timer);
+			// 	//重新计算新的宽度
+			// 	self.width = parseInt(window.getComputedStyle(self.dom)["width"]);
+				
+			// 	var next = self.nowidx + 1 <= self.lislength - 1 ? self.nowidx + 1 : 0; 
+			// 	var prev = self.nowidx - 1 >= 0 ? self.nowidx - 1 : self.lislength - 1; 
+				 
+			// 	//重新设置初始位置，去掉过渡
+			// 	//设置初始位置
+			// 	for(var i = 0 ; i < self.lislength ; i++){
+			// 		self.lis[i].style.transition = "none";
+			// 		self.lis[i].style.transform = "translateX(" + self.width + "px)";
+			// 		self.lis[i].style.webkitTransform = "translateX(" + self.width + "px)";
+			// 	}
+			// 	//改变位置
+			// 	self.lis[self.nowidx].style.transform = "translateX(0)";
+			// 	self.lis[prev].style.transform = "translateX(" + -self.width + "px)";
+			// 	self.lis[next].style.transform = "translateX(" + self.width + "px)";
+
+			// 	//设置高度
+			// 	self.dom.style.height = window.getComputedStyle(self.lis[0])["height"];
+
+			// 	self.setAutoPlay();
+			// },true);
+
+			//设置初始位置
+			for(var i = 1 ; i < this.lislength ; i++){
+				this.lis[i].style.transform = "translateX(" + this.width + "px)";
+				this.lis[i].style.webkitTransform = "translateX(" + this.width + "px)";
+			}
+
+			this.setAutoPlay();
+		}
+		//开始触摸
+		TouchCarousel.prototype.touchstarthandler = function(event){
+			event.preventDefault();  //阻止默认事件
+			var finger = event.touches[0];
+			//开始位置
+			this.startX = finger.clientX;
+			//开始触摸的时间
+			this.startTime = event.timeStamp;
+			//停表
+			clearInterval(this.timer);
+		}
+		//触摸移动
+		TouchCarousel.prototype.touchmovehandler = function(event){
+			event.preventDefault();  //阻止默认事件
+			var finger = event.touches[0];
+			//移动的坐标
+			this.dX = finger.clientX - this.startX;
+			//图片编号，下一张图片、上一张图片
+			var next = this.nowidx + 1 <= this.lislength - 1 ? this.nowidx + 1 : 0; 
+			var prev = this.nowidx - 1 >= 0 ? this.nowidx - 1 : this.lislength - 1; 
+			//去掉过渡
+			this.lis[this.nowidx].style.transition = "none";
+			this.lis[next].style.transition = "none";
+			this.lis[prev].style.transition = "none";
+			//当前图片设置transform为dX。上一张为-this.width+dX。下一张为this.width + dX。
+			this.lis[this.nowidx].style.transform = "translateX(" + this.dX + "px)";
+			this.lis[next].style.transform = "translateX(" + (this.width + this.dX) + "px)";
+			this.lis[prev].style.transform = "translateX(" + (-this.width + this.dX) + "px)";
+			//加上前缀版本：
+			this.lis[this.nowidx].style.webkitTransform = "translateX(" + this.dX + "px)";
+			this.lis[next].style.webkitTransform = "translateX(" + (this.width + this.dX) + "px)";
+			this.lis[prev].style.webkitTransform = "translateX(" + (-this.width + this.dX) + "px)";
+			//停表
+			clearInterval(this.timer);
+		}
+		//触摸结束
+		TouchCarousel.prototype.touchendhandler = function(event){
+			event.preventDefault();  //阻止默认事件
+			var finger = event.touches[0];
+			//图片编号，下一张图片、上一张图片
+			var next = this.nowidx + 1 <= this.lislength - 1 ? this.nowidx + 1 : 0; 
+			var prev = this.nowidx - 1 >= 0 ? this.nowidx - 1 : this.lislength - 1; 
+			//触摸总时间
+			var d = event.timeStamp - this.startTime;
+
+			if(this.dX < -this.width / 2 || d < 200 && this.dX < -20){
+				//向左边滑动成功
+				if(d > 200){
+					this.lis[this.nowidx].style.transition = "all 0.3s ease 0s";
+					this.lis[next].style.transition = "all 0.3s ease 0s";
+				}else{
+					this.lis[this.nowidx].style.transition = "all 0.1s ease 0s";
+					this.lis[next].style.transition = "all 0.1s ease 0s";
+				}
+
+				this.lis[this.nowidx].style.transform = "translateX(" + -this.width + "px)";
+				this.lis[next].style.transform = "translateX(" + 0 + "px)";
+
+				this.lis[this.nowidx].style.webkitTransform = "translateX(" + -this.width + "px)";
+				this.lis[next].style.webkitTransform = "translateX(" + 0 + "px)";
+
+				this.nowidx = next;
+			}else if(this.dX < 0){
+				//向左滑动没有成功
+				this.lis[this.nowidx].style.transition = "all 0.3s ease 0s";
+				this.lis[next].style.transition = "all 0.3s ease 0s";
+
+				this.lis[this.nowidx].style.transform = "translateX(" + 0 + "px)";
+				this.lis[next].style.transform = "translateX(" + this.width + "px)";
+
+				this.lis[this.nowidx].style.webkitTransform = "translateX(" + 0 + "px)";
+				this.lis[next].style.webkitTransform = "translateX(" + this.width + "px)";
+			}else if(this.dX > this.width / 2 || d < 200 && this.dX > 20){
+				//向右边滑动成功
+				if(d > 200){
+					this.lis[this.nowidx].style.transition = "all 0.3s ease 0s";
+					this.lis[prev].style.transition = "all 0.3s ease 0s";
+				}else{
+					this.lis[this.nowidx].style.transition = "all 0.1s ease 0s";
+					this.lis[prev].style.transition = "all 0.1s ease";
+				}
+
+				this.lis[this.nowidx].style.transform = "translateX(" + this.width + "px)";
+				this.lis[prev].style.transform = "translateX(" + 0 + "px)";
+
+				this.lis[this.nowidx].style.webkitTransform = "translateX(" + this.width + "px)";
+				this.lis[prev].style.webkitTransform = "translateX(" + 0 + "px)";
+
+				this.nowidx = prev;
+			}else if(this.dX > 0){
+				//向左滑动没有成功
+				this.lis[this.nowidx].style.transition = "all 0.3s ease 0s";
+				this.lis[prev].style.transition = "all 0.3s ease 0s";
+
+				this.lis[this.nowidx].style.transform = "translateX(" + 0 + "px)";
+				this.lis[prev].style.transform = "translateX(" + -this.width + "px)";
+
+				this.lis[this.nowidx].style.webkitTransform = "translateX(" + 0 + "px)";
+				this.lis[prev].style.webkitTransform = "translateX(" + -this.width + "px)";
+			}
+
+			//让所有人都没有cur
+			for(var i = 0 ; i < this.circlesLis.length ; i++){
+				this.circlesLis[i].className = "";
+			}
+			//当前的有cur
+			this.circlesLis[this.nowidx].className = "cur";
+
+			//定时器打开
+			this.setAutoPlay();
+		}
+		TouchCarousel.prototype.setAutoPlay = function(){
+			var self = this;
+			//设置定时器
+			clearInterval(this.timer);
+			this.timer = setInterval(function(){
+				//图片编号，下一张图片、上一张图片
+				var next = self.nowidx + 1 <= self.lislength - 1 ? self.nowidx + 1 : 0; 
+				var prev = self.nowidx - 1 >= 0 ? self.nowidx - 1 : self.lislength - 1; 
+
+				//瞬移
+				self.lis[next].style.transition = "none";
+				self.lis[next].style.transform = "translateX(" + self.width + "px)";
+				self.lis[next].style.webkitTransform = "translateX(" + self.width + "px)";
+				self.lis[self.nowidx].style.transform = "translateX(" + 0 + "px)";
+				self.lis[self.nowidx].style.webkitTransform = "translateX(" + 0 + "px)";
+
+				//滞后1秒钟然后拉动
+				setTimeout(function(){
+					//加上过渡动画
+					self.lis[self.nowidx].style.transition = "all 0.3s ease 0s";
+					self.lis[next].style.transition = "all 0.3s ease 0s";
+					self.lis[self.nowidx].style.transform = "translateX(" + -self.width + "px)";
+					self.lis[next].style.transform = "translateX(" + 0 + "px)";
+					self.lis[self.nowidx].style.webkitTransform = "translateX(" + -self.width + "px)";
+					self.lis[next].style.webkitTransform = "translateX(" + 0 + "px)";
+
+					self.nowidx = next;
+
+					//让所有人都没有cur
+					for(var i = 0 ; i < self.circlesLis.length ; i++){
+						self.circlesLis[i].className = "";
+					}
+					//当前的有cur
+					self.circlesLis[self.nowidx].className = "cur";
+				},1);
+			},2000);
+		}
+
+		new TouchCarousel("carousel");
+		 
+	</script>
+	
+</body>
+</html>

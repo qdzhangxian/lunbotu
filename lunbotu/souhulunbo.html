@@ -1,0 +1,217 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{margin: 0;padding: 0;}
+		.carousel{
+			width: 740px; 
+			height: 350px;
+			border: 1px solid #000; 
+			margin: 50px auto;
+			position: relative;
+			background-color: black;
+		}
+		.carousel .small_control{
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			background-image: -webkit-linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4) 35%, rgba(0, 0, 0, 0.992157));
+			width: 100%;
+			height: 100px;
+		}
+		.carousel .small_control a{
+			position: absolute;
+			width: 31px;
+			height: 46px;
+			z-index: 2;
+		}
+		.carousel .small_control .leftBtn{
+			left: 30px;
+			top: 30px;
+			background: url(images/sohu/prev.png);
+		}
+		.carousel .small_control .rightBtn{
+			right: 30px;
+			top: 30px;
+			background: url(images/sohu/next.png);
+		}
+		.carousel .small_control .small_pics{
+			position: absolute;
+			top: 30px;
+			left: 100px;
+			overflow: hidden;
+			width: 550px;
+			height: 55px;
+		}
+		.carousel .small_control .small_pics ul{
+			list-style: none;
+			width: 4000px;
+			position: relative;
+			height:55px;
+		}
+		.carousel .small_control .small_pics ul li{
+			float: left;
+			margin-right: 20px;
+			width: 90px;
+			height: 45px;
+ 			padding-top: 8px;
+ 			padding-left: 2px;
+ 			padding-right: 2px;
+ 			padding-bottom: 2px;
+		}
+		.carousel .small_control .small_pics ul li img{
+			width: 90px;
+			height: 45px;
+		}
+		.carousel .small_control .small_pics ul li.cur{
+			background: url(images/sohu/lion.png) no-repeat;
+		}
+
+		.carousel .large_pic{
+			width: 740px; 
+			height: 350px;
+			position: relative;
+			overflow: hidden;
+		}
+		.carousel .large_pic ul{
+			list-style: none;
+		}
+		.carousel .large_pic ul li{
+			position: absolute;
+			top: 0;
+			left: 50%;
+			width: 1120px;
+			margin-left: -560px;
+			display: none;
+		}
+		.carousel .large_pic ul li.first{
+			display: block;
+		}
+	</style>
+</head>
+<body>
+	<div class="carousel">
+		<div class="large_pic" id="large_pic">
+			<ul>
+				<li class="first"><a href=""><img src="images/sohu/0.jpg" /></a></li>
+				<li><a href=""><img src="images/sohu/1.jpg" /></a></li>
+				<li><a href=""><img src="images/sohu/2.jpg" /></a></li>
+				<li><a href=""><img src="images/sohu/3.jpg" /></a></li>
+				<li><a href=""><img src="images/sohu/4.jpg" /></a></li>
+			</ul>
+		</div>
+
+		<div class="small_control">
+			<div class="btns">
+				<a href="javascript:void(0);" class="leftBtn" id="leftBtn"></a>
+				<a href="javascript:void(0);" class="rightBtn" id="rightBtn"></a>
+			</div>
+			<div class="small_pics" id="small_pics">
+				<ul>
+					<li class="cur"><img src="images/sohu/s0.jpg" alt="" /></li>
+					<li><img src="images/sohu/s1.jpg" alt="" /></li>
+					<li><img src="images/sohu/s2.jpg" alt="" /></li>
+					<li><img src="images/sohu/s3.jpg" alt="" /></li>
+					<li><img src="images/sohu/s4.jpg" alt="" /></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript">
+		var amount = $("#small_pics li").length;
+		var $rightBtn = $("#rightBtn");
+		var $leftBtn = $("#leftBtn");
+		var $smallPicUl = $("#small_pics ul");
+		var $smallPicLis = $("#small_pics ul li");
+		var $largePicLis = $("#large_pic li");
+
+		//大信号量，当前哪张大图被显示 0、1、2、3、4
+		var idx = 0;
+		//这是一个小信号量，这个表示当前哪个小图处在最先位 
+		var smallpic_idx = 0;
+
+		//克隆一倍的小图片
+		$smallPicLis.clone().appendTo($smallPicUl);
+
+		//定时器
+		var timer = setInterval(nextPic,2000);
+		$(".carousel").mouseenter(function(){clearInterval(timer);})
+		$(".carousel").mouseleave(function(){clearInterval(timer); timer = setInterval(nextPic,2000);})
+
+		function nextPic(){
+			//老图淡出
+			$largePicLis.eq(idx).stop(true).fadeOut();
+			//信号量改变
+			idx++;
+			if(idx > amount - 1){
+				idx = 0;
+			}
+			//新图淡入
+			$largePicLis.eq(idx).stop(true).fadeIn();
+
+			//小图的cur
+			$("#small_pics ul li").removeClass("cur");
+			$("#small_pics ul li").eq(idx).addClass("cur");
+			$("#small_pics ul li").eq(idx + amount).addClass("cur");
+		}
+
+		//右边按钮监听
+		$rightBtn.click(function(){
+			if($smallPicUl.is(":animated")){
+				return;
+			}
+
+			//先拉动，后瞬移
+			smallpic_idx++;
+			$smallPicUl.animate({"left":-114 * smallpic_idx},300,function(){
+				if(smallpic_idx > amount - 1){
+					smallpic_idx = 0;
+					$smallPicUl.css("left",0);
+				}
+			});
+		});
+
+		//左边按钮业务
+		$leftBtn.click(function(){
+			if($smallPicUl.is(":animated")){
+				return;
+			}
+
+			smallpic_idx--;
+			//先瞬移，后拉动
+			if(smallpic_idx < 0){
+				smallpic_idx = amount - 1;
+				$smallPicUl.css("left",-114 * amount);
+			}
+
+			$smallPicUl.animate({"left":-114 * smallpic_idx},300);
+		});
+
+
+		//小图的触碰业务
+		$("#small_pics ul li").mouseenter(function(){
+			//碰到第1张图片，此时i就是1；
+			//碰到第8的图片，此时i就是3；
+			var i = $(this).index() % amount;
+			//如果你碰到的这个图片和当前信号量一样，什么也不做
+			if(i == idx){
+				return;
+			}
+
+			$largePicLis.eq(idx).stop(true).fadeOut();
+			//改变信号量
+			idx = i;
+			$largePicLis.eq(idx).stop(true).fadeIn();
+
+			//现在有两张图片加上了cur。分别是第i张和第i+5张
+			$("#small_pics ul li").removeClass("cur");
+			$("#small_pics ul li").eq(idx).addClass("cur");
+			$("#small_pics ul li").eq(idx + amount).addClass("cur");
+		});
+	</script>
+</body>
+</html>

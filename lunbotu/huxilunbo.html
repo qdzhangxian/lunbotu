@@ -1,0 +1,247 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>腾讯好莱坞</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.banner{
+			height: 435px;
+			background-color: black;
+		}
+		.banner ul{
+			list-style: none;
+		}
+		.banner ul li{
+			position: absolute;
+			top: 0;
+			left: 0;
+			overflow: hidden;
+			width: 100%;
+			height: 435px;
+			display: none;
+		}
+		.banner ul li.first{
+			display: block;
+		}
+		.banner ul li img{
+			position: absolute;
+			left: 50%;
+			margin-left: -840px;
+		}
+		.inner_c{
+			width: 1000px;
+			position: absolute;
+			left: 50%;
+			margin-left: -500px;
+			height: 435px;
+		}
+		.inner_c .banner_control{
+			position: absolute;
+			bottom: 10px;
+			left: 0px;
+			width: 867px;
+			height: 64px;
+			background:rgba(0,0,0,.6);
+			z-index: 2;
+		}
+		.btns a{
+			position: absolute;
+			width: 34px;
+			height: 50px;
+			background:url(images/qqfilm/sprite_banner.png);
+			top:4px;
+		}
+		.btns a.leftBtn{
+			left: 10px;
+			background-position: -34px 0;
+		}
+		.btns a.rightBtn{
+			right: 10px;
+			background-position: -73px 0;
+		}
+		.circles{
+			position: absolute;
+			top: 22px;
+			left: 100px;
+		}
+		.circles ol{
+			list-style: none;
+		}
+		.circles ol li{
+			float: left;
+			width: 12px;
+			height: 12px;
+			margin-right: 20px;
+			background-color: #ccc;
+			box-shadow: 1px 1px 1px black;
+		}
+		.circles ol li.cur{
+			background-color: red;
+		}
+	</style>
+</head>
+<body>
+	<div class="banner" id="banner">
+		<div class="imageslist" id="imageslist">
+			<ul>
+				<li class="first" data-yanse="#DCEEEE"><a href=""><img src="images/qqfilm/0.jpg" alt="" /></a></li>
+				<li data-yanse="#333A40"><a href=""><img src="images/qqfilm/1.jpg" alt="" /></a></li>
+				<li data-yanse="#FCD43F"><a href=""><img src="images/qqfilm/2.jpg" alt="" /></a></li>
+				<li data-yanse="#000000"><a href=""><img src="images/qqfilm/3.jpg" alt="" /></a></li>
+				<li data-yanse="#A8BCBD"><a href=""><img src="images/qqfilm/4.jpg" alt="" /></a></li>
+				<li data-yanse="#241913"><a href=""><img src="images/qqfilm/5.jpg" alt="" /></a></li>
+				<li data-yanse="#040301"><a href=""><img src="images/qqfilm/6.jpg" alt="" /></a></li>
+			</ul>
+		</div>
+		
+		<div class="inner_c">
+			<div class="banner_control">
+				<div class="btns">
+					<a href="javascript:void(0)" id="leftBtn" class="leftBtn"></a>
+					<a href="javascript:void(0)" id="rightBtn" class="rightBtn"></a>
+				</div>
+				<div class="circles" id="circles">
+					<ol>
+						<li class="cur"></li>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li></li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript">
+		var $rightBtn = $("#rightBtn");
+		var $leftBtn = $("#leftBtn");
+		var $circlesLis = $("#circles li");
+		var $imageslistLis = $("#imageslist li");
+		var $banner = $("#banner");
+
+		var idx = 0;
+
+		//定时器
+		var timer = setInterval(rightBtnHandler,2000);
+
+		$banner.mouseenter(function(){
+			clearInterval(timer);
+		});
+
+		$banner.mouseleave(function(){
+			timer = setInterval(rightBtnHandler,2000);
+		});
+
+		//右按钮
+		$rightBtn.click(rightBtnHandler);
+		function rightBtnHandler(){
+			//防止动画积累
+			if($imageslistLis.is(":animated")){
+				return;
+			}
+
+			//老图淡出
+			$imageslistLis.eq(idx).fadeOut(300,function(){
+				//新图淡入
+				$imageslistLis.eq(idx).fadeIn(400,function(){
+					//背景色
+					$banner.css("background-color",$imageslistLis.eq(idx).attr("data-yanse"));
+				});
+				
+			});
+
+			//信号量改变，这行语句没有在回调函数里面，所以会提前执行。
+			//等回调函数执行的时候idx已经加1了。
+			idx++;
+			if(idx > $imageslistLis.length - 1){
+				idx = 0;
+			}
+
+			//小圆点
+			$circlesLis.eq(idx).addClass('cur').siblings().removeClass('cur');
+
+		}
+
+		//左边按钮
+		$leftBtn.click(function(){
+			//防止动画积累
+			if($imageslistLis.is(":animated")){
+				return;
+			}
+
+			//老图淡出
+			$imageslistLis.eq(idx).fadeOut(300,function(){
+				//新图淡入
+				$imageslistLis.eq(idx).fadeIn(400,function(){
+					//背景色
+					$banner.css("background-color",$imageslistLis.eq(idx).attr("data-yanse"));
+				});
+			});
+
+			//信号量改变，这行语句没有在回调函数里面，所以会提前执行。
+			//等回调函数执行的时候idx已经加1了。
+			idx--;
+			if(idx < 0){
+				idx = $imageslistLis.length - 1;
+			}
+
+			//小圆点
+			$circlesLis.eq(idx).addClass('cur').siblings().removeClass('cur');
+
+			
+		});
+
+		//计数器
+		var number = 0;
+		var timer_number;
+		//小圆点的触碰
+		$circlesLis.mouseenter(function(){
+			//碰到的小圆点序号
+			var i = $(this).index();
+			//碰到小圆点之后，就要把计数器清零
+			number = 0;
+			//设表先关
+			clearInterval(timer_number);
+			//重新计数
+			timer_number = setInterval(function(){
+				number++;
+				if(number > 100){
+					clearInterval(timer_number);
+					circlesLisHandler(i);
+				}
+			},1)
+		});
+
+		//小圆点的事件处理函数
+		function circlesLisHandler(i){
+			//老图淡出
+			$imageslistLis.eq(idx).stop(true).fadeOut(300,function(){
+				//新图淡入
+				$imageslistLis.eq(idx).stop(true).fadeIn();
+			});
+
+			//信号量点谁变成谁
+			idx = i;
+
+			//小圆点
+			$circlesLis.eq(idx).addClass('cur').siblings().removeClass('cur');
+
+			//背景色
+			$banner.css("background-color",$imageslistLis.eq(idx).attr("data-yanse"));
+		}
+
+		//从小圆点上离开，也要清除定时器
+		$circlesLis.mouseleave(function(){
+			clearInterval(timer_number);
+			number = 0;
+		})
+	</script>
+</body>
+</html>

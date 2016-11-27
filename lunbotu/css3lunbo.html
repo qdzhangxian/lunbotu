@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>滚滚屏</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body,html{
+			height: 100%;
+		}
+		body{
+			overflow: hidden;
+		}
+		.inner{
+			width: 1200px;
+			margin: 0 auto;
+			position: relative;
+		}
+		.container{
+			height: 100%;
+			position: relative;
+			transition:all 0.3s cubic-bezier(0.9, 0.01, 1, 0.77) 0s;
+			top: 0%;
+		}
+		.page{
+			width: 100%;
+			height: 100%;
+			background-color: red;
+			overflow: hidden;
+		}
+		.page1{
+			background:skyblue url(images/bg.png) center top no-repeat;
+		}
+		.page2{
+			background:#333 url(images/bg.png) center top  no-repeat;
+		}
+		.page3{
+			background:orange url(images/bg.png) center top  no-repeat;
+		}
+		.page4{
+			background:yellowgreen url(images/bg.png) center top  no-repeat;
+		}
+		.page5{
+			background:gray url(images/bg.png) center top  no-repeat;
+		}
+		/*第1屏幕*/
+		.page1 h1{
+			position: absolute;
+			top: 100px;
+			left: 40px;
+			font-size: 60px;
+			display: none;
+		}
+		.page1 img.baby{
+			position: absolute;
+			top: 230px;
+			left: 60px;
+			display: none;
+		}
+		.page1 img.xiaoming{
+			position: absolute;
+			top: 300px;
+			left: 260px;
+			display: none;
+		}
+		.words{
+			position: absolute;
+			top: 260px;
+			left: 600px;
+			font-size: 25px;
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="page page1">
+			<div class="inner">
+				<h1>黄教主和AngelaBaby</h1>
+				<img src="images/baby.png" class="baby">
+				<img src="images/xiaoming.png" class="xiaoming">
+				<div class="words">
+					<p>国庆后娱乐圈最大的新闻就是黄教主和Angelababy女神在微博宣布怀孕</p>
+					<p>被网友戏称娱乐圈最大的谜团揭晓</p>
+					<p>一时之间数百万粉丝涌进两人的微博道喜</p>
+					<p>有网友开始猜测宝宝性别长相，粉丝真是操碎了心</p>
+				</div>
+			</div>
+		</div>
+		<div class="page page2"></div>
+		<div class="page page3"></div>
+		<div class="page page4"></div>
+		<div class="page page5"></div>
+	</div>
+
+	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript" src="js/jquery.mousewheel.min.js"></script>
+	<script type="text/javascript" src="js/animate.js"></script>
+	<script type="text/javascript">
+		var nowpage = 1; //1、2、3、4、5
+		var lock = true;
+
+		//调用0的入场
+		inanimate[1]();
+
+		$(document).on("mousewheel",function(event,delta){
+			//函数节流
+			if(!lock) return;
+			lock = false;
+
+			//备份老信号量
+			var old = nowpage;
+			//信号量改变
+			nowpage -= delta;
+			if(nowpage < 1){
+				nowpage = 1;
+			}else if(nowpage > 5){
+				nowpage = 5;
+			}
+
+			//看看信号量是不是改变了
+			if(old != nowpage){
+				inanimate[nowpage]();
+				outanimate[old]();
+			}
+
+			//移动
+			$(".container").css({"top" : (nowpage - 1) * -100 + "%"});
+
+			setTimeout(function(){
+				lock = true;
+			},300);
+		});
+	</script>
+</body>
+</html>

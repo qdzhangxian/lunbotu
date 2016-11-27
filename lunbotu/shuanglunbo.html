@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>360官网</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.carouselBox{
+			width: 560px;
+			height: 300px;
+			border: 1px solid #000;
+			margin: 50px auto;
+			position: relative;
+			overflow: hidden;
+		}
+		.carouselBox .bar{
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 60px;
+			height: 300px;
+			z-index: 999;
+		}
+		.carouselBox .bar span{
+			display: block;
+			width: 60px;
+			height: 135px;
+			background:url(images/barbg.png);
+			opacity: 0.4;
+			padding-top: 15px;
+		}
+		.carouselBox .bar span.cur{
+			opacity: 1;
+		}
+		.carouselBox .btns a{
+			position: absolute;
+			width: 40px;
+			height: 40px;
+			background-color: black;
+			opacity: 0.6;
+			top: 130px;
+			text-decoration: none;
+			color:white;
+			font-size: 30px;
+			text-align: center;
+			line-height: 40px;
+			z-index: 999;
+		}
+		.carouselBox .btns a:hover{
+			background-color: orange;
+		}
+		.carouselBox .btns a.leftBtn{
+			left: 70px;
+		}
+		.carouselBox .btns a.rightBtn{
+			right: 10px;
+		}
+		.carouselBox .carousel_container{
+			position: relative;
+		}
+		.carouselBox .carousel_container .carousel{
+			position: relative;
+			width: 560px;
+			height: 300px;
+		}
+		.carouselBox .carousel_container .carousel .imageList ul{
+			list-style: none;
+		}
+		.carouselBox .carousel_container .carousel .imageList ul li{
+			position: absolute;
+			top: 0;
+			left: 560px;
+		}
+		.carouselBox .carousel_container .carousel .imageList ul li.first{
+			left: 0;
+		}
+		.carouselBox .carousel_container .carousel .circles{
+			position: absolute;
+			bottom: 10px;
+			left: 50%;
+			margin-left: -70px;
+			width: 140px;
+			height: 20px;
+			z-index: 999;
+		}
+		.carouselBox .carousel_container .carousel .circles ol{
+			list-style: none;
+		}
+		.carouselBox .carousel_container .carousel .circles ol li{
+			float: left;
+			width: 20px;
+			height: 20px;
+			background-color: white;
+			margin-right: 10px;
+			opacity: 0.4;
+		}
+		.carouselBox .carousel_container .carousel .circles ol li.cur{
+			opacity: 0.9;
+		}
+		.nomargin{
+			margin: 0 !important;
+		}
+		.bar span b{
+			display: block;
+			text-align: center;
+			line-height: 30px;
+			color:white;
+		}
+	</style>
+</head>
+<body>
+	<div class="carouselBox">
+		<div class="bar">
+			<span class="cur"><b>唯</b><b>美</b><b>摄</b><b>影</b></span>
+			<span><b>阿</b><b>猫</b><b>阿</b><b>狗</b></span>
+		</div>
+		<div class="btns">
+			<a href="javascript:void(0);" class="leftBtn"  id="leftBtn" >&lt;</a>
+			<a href="javascript:void(0);" class="rightBtn" id="rightBtn">&gt;</a>
+		</div>
+
+		<div class="carousel_container">
+			<div class="carousel carousel0">
+				<div class="imageList">
+					<ul>
+						<li class="first"><a href="#"><img src="images/weimei/0.jpg" alt="" /></a></li>
+						<li><a href="#"><img src="images/weimei/1.jpg" alt="" /></a></li>
+						<li><a href="#"><img src="images/weimei/2.jpg" alt="" /></a></li>
+						<li><a href="#"><img src="images/weimei/3.jpg" alt="" /></a></li>
+						<li><a href="#"><img src="images/weimei/4.jpg" alt="" /></a></li>
+					</ul>
+				</div>
+				<div class="circles">
+					<ol>
+						<li class="cur"></li>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li class="nomargin"></li>
+					</ol>
+				</div>
+			</div>
+			<div class="carousel carousel1">
+				<div class="imageList">
+					<ul>
+						<li class="first"><a href="#"><img src="images/maogou/0.jpg" alt="" /></a></li>
+						<li><a href="#"><img src="images/maogou/1.jpg" alt="" /></a></li>
+						<li><a href="#"><img src="images/maogou/2.jpg" alt="" /></a></li>
+						<li><a href="#"><img src="images/maogou/3.jpg" alt="" /></a></li>
+						<li><a href="#"><img src="images/maogou/4.jpg" alt="" /></a></li>
+					</ul>
+				</div>
+				<div class="circles">
+					<ol>
+						<li class="cur"></li>
+						<li></li>
+						<li></li>
+						<li></li>
+						<li class="nomargin"></li>
+					</ol>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript">
+		var $leftBtn = $("#leftBtn");
+		var $rightBtn = $("#rightBtn");
+		var $c0imagesList = $(".carousel0 .imageList ul li");
+		var $c1imagesList = $(".carousel1 .imageList ul li");
+		var $container = $(".carousel_container");
+		var $c0circlesLis = $(".carousel0 .circles li");
+		var $c1circlesLis = $(".carousel1 .circles li");
+
+		//总信号量，合法值0、12，当前正在显示哪个轮播图
+		var nowcarsel = 0;	
+
+		var c0idx = 0;		//0号轮播图的信号量，表示0号轮播图哪张图片正被显示
+		var c1idx = 0;		//1号轮播图的信号量，表示1号轮播图哪张图片正被显示
+
+		//存放imagesList的数组
+		var imagesListArr = [$c0imagesList,$c1imagesList];
+		//小信号量的数组
+		var idxArr = [c0idx,c1idx];
+		//小圆点的数组
+		var circlesArr = [$c0circlesLis,$c1circlesLis];
+
+		var timer = setInterval(rightBtnHandler,800);
+		$(".carouselBox").mouseenter(function(){clearInterval(timer);});
+		$(".carouselBox").mouseleave(function(){clearInterval(timer);timer = setInterval(rightBtnHandler,800);});
+
+		//点击右边那妞做的事情
+		$rightBtn.click(rightBtnHandler);
+		function rightBtnHandler(){
+			if(imagesListArr[nowcarsel].is(":animated")){
+				return;
+			}
+
+			//这个轮播图不是0、1、2、3、4、0、1、2、3、4、0、1……周期的轮播图
+			//而是到4是最大，如果当前信号量已经是4，那么不能点击了！
+			if(idxArr[nowcarsel] == 4){
+				//最有价值语句：
+				nowcarsel = nowcarsel == 1 ? 0 : 1;
+				//拉动container：
+				$container.animate({"top":-300 * nowcarsel},300);
+				//让新的轮播图变为0：
+				idxArr[nowcarsel] = 0;
+				//让图复位：
+				imagesListArr[nowcarsel].eq(0).css("left",0).siblings().css("left",560);
+				//小圆点复位：
+				circlesArr[nowcarsel].eq(0).addClass("cur").siblings().removeClass("cur");
+				//改变bar的span谁有cur，谁没cur
+				$(".bar span").eq(nowcarsel).addClass("cur").siblings().removeClass("cur");
+				return;
+			}
+
+			//老图左边移动
+			imagesListArr[nowcarsel].eq(idxArr[nowcarsel]).animate({"left":-560},300);
+			idxArr[nowcarsel]++;
+			//新图左边移动
+			imagesListArr[nowcarsel].eq(idxArr[nowcarsel]).css("left",560).animate({"left":0},300);
+			//小圆点
+			circlesArr[nowcarsel].eq(idxArr[nowcarsel]).addClass("cur").siblings().removeClass("cur");
+		}
+
+
+		//点击左边那妞做的事情
+		$leftBtn.click(function(){
+			if(imagesListArr[nowcarsel].is(":animated")){
+				return;
+			}
+			//这个轮播图不是0、1、2、3、4、0、1、2、3、4、0、1……周期的轮播图
+			//而是到4是最大，如果当前信号量已经是4，那么不能点击了！
+			if(idxArr[nowcarsel] == 0){
+				//最有价值语句：
+				nowcarsel = nowcarsel == 1 ? 0 : 1;
+				//拉动container：
+				$container.animate({"top":-300 * nowcarsel},300);
+				//让新的轮播图变为4：
+				idxArr[nowcarsel] = 4;
+				//让图复位：
+				imagesListArr[nowcarsel].eq(4).css("left",0).siblings().css("left",560);
+				//小圆点复位：
+				circlesArr[nowcarsel].eq(4).addClass("cur").siblings().removeClass("cur");
+				//改变bar的span谁有cur，谁没cur
+				$(".bar span").eq(nowcarsel).addClass("cur").siblings().removeClass("cur");
+				return;
+			}
+
+			//老图右边移动
+			imagesListArr[nowcarsel].eq(idxArr[nowcarsel]).animate({"left":560},300);
+			idxArr[nowcarsel]--;
+			//新图左边移动
+			imagesListArr[nowcarsel].eq(idxArr[nowcarsel]).css("left",-560).animate({"left":0},300);
+			//小圆点
+			circlesArr[nowcarsel].eq(idxArr[nowcarsel]).addClass("cur").siblings().removeClass("cur");
+		});
+
+
+		//bar的点击
+		$(".bar span").click(function(){
+			//让大信号量改变为当前点击的span
+			nowcarsel = $(this).index();
+			//让container移动，移动到当前点击序号的-300倍上
+			$container.animate({"top":-300 * $(this).index()},300);
+			//cur的改变
+			$(this).addClass("cur").siblings().removeClass("cur");
+		});
+
+
+		//小圆点的点击
+		$(".circles li").click(function(){
+			if(imagesListArr[nowcarsel].is(":animated")){
+				return;
+			}
+
+			//让当前被点击的小圆点序号，成为正在使用的小信号量
+			if($(this).index() > idxArr[nowcarsel]){
+				imagesListArr[nowcarsel].eq(idxArr[nowcarsel]).animate({"left":-560},300);
+				idxArr[nowcarsel] = $(this).index();
+				//新图左边移动
+				imagesListArr[nowcarsel].eq(idxArr[nowcarsel]).css("left",560).animate({"left":0},300);
+				
+			}else if($(this).index() < idxArr[nowcarsel]){
+				imagesListArr[nowcarsel].eq(idxArr[nowcarsel]).animate({"left":560},300);
+				idxArr[nowcarsel] = $(this).index();
+				//新图左边移动
+				imagesListArr[nowcarsel].eq(idxArr[nowcarsel]).css("left",-560).animate({"left":0},300);
+			}
+			//小圆点
+			circlesArr[nowcarsel].eq(idxArr[nowcarsel]).addClass("cur").siblings().removeClass("cur");
+		});
+	</script>
+</body>
+</html>

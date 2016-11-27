@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Document</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.gamebanner{
+			width: 1200px;
+			height: 100px;
+			margin: 100px auto;
+			border: 1px solid #000;
+			/*overflow: hidden;*/
+		}
+		.gamebanner ul{
+			list-style: none;
+			width: 9999px;
+			position: relative;
+		}
+		.gamebanner ul li{
+			float: left;
+			/*overflow: hidden;*/
+		}
+		.gamebanner ul li .hd{
+			float: left;
+			width: 285px;
+			height: 100px;
+			margin-right: 20px;
+		}
+		.gamebanner ul li .bd{
+			float: left;
+			width: 0px;
+			height: 100px;
+			/*overflow: hidden;*/
+		}
+	</style>
+</head>
+<body>
+	<div class="gamebanner">
+		<ul>
+			<li>
+				<div class="hd">
+					<img src="images/homework2/0.jpg" alt="" />
+				</div>
+				<div class="bd">
+					<img src="images/homework2/b0.jpg" alt="" />
+				</div>
+			</li>
+			<li>
+				<div class="hd">
+					<img src="images/homework2/1.jpg" alt="" />
+				</div>
+				<div class="bd">
+					<img src="images/homework2/b1.jpg" alt="" />
+				</div>
+			</li>
+			<li>
+				<div class="hd">
+					<img src="images/homework2/2.jpg" alt="" />
+				</div>
+				<div class="bd">
+					<img src="images/homework2/b2.jpg" alt="" />
+				</div>
+			</li>
+			<li>
+				<div class="hd">
+					<img src="images/homework2/3.jpg" alt="" />
+				</div>
+				<div class="bd">
+					<img src="images/homework2/b3.jpg" alt="" />
+				</div>
+			</li>
+		</ul>
+	</div>
+
+	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript">
+		$("li").mouseenter(function(){
+			$(this).children(".bd").stop(true).animate({"width":895},400);
+			//ui集体移动
+			$("ul").stop(true).animate({"left":$(this).index() * -305},400)
+		});
+
+		$(".gamebanner").mouseleave(function(){
+			$(".bd").stop(true).animate({"width":0},400);
+			$("ul").stop(true).animate({"left":0},400);
+		});
+	</script>
+</body>
+</html>

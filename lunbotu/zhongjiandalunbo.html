@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>异型滚动</title>
+	<style type="text/css">
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.carousel{
+			width: 670px;
+			height: 221px;
+			border: 1px solid #000;
+			margin: 100px auto;
+			background: url(images/pic_bg.gif);
+			position: relative;
+			overflow: hidden;
+		}
+		.btns a{
+			position: absolute;
+			width: 44px;
+			height: 44px;
+		    top: 150px;
+		}
+		.btns .btn1{
+			left: 25px;
+		}
+		.btns .btn2{
+		 	right: 25px;
+		}
+		.imagesList ul{
+			list-style: none;
+		}
+		.imagesList ul li{
+			position: absolute;
+		}
+		/*img元素不收父盒子的宽高影响，所以要写下面的这个属性：*/
+		.imagesList ul li img{
+			width: 100%;
+			height: 100%;
+		}
+		.imagesList ul li.no0{
+		    width: 70px;
+		    height: 50px;
+		    left: -120px;
+		    top: 70px;
+		}
+		.imagesList ul li.no1{
+		    width: 90px;
+		    height: 60px;
+		    left: 20px;
+		    top: 60px;
+		}
+		.imagesList ul li.no2{
+			width: 112px;
+		    height: 84px;
+		    left: 121px;
+		    top: 30px;
+		}
+		.imagesList ul li.no3{
+		    width: 156px;
+		    height: 100px;
+		    left: 250px;
+		    top: 16px;
+		}
+		.imagesList ul li.no4{
+			width: 112px;
+		    height: 84px;
+		    left: 421px;
+		    top: 30px;
+		}
+		.imagesList ul li.no5{
+		    width: 90px;
+		    height: 60px;
+		    left: 560px;
+		    top: 60px;
+		}
+		.imagesList ul li.no6{
+		 	width: 70px;
+		    height: 50px;
+		    left: 710px;
+		    top: 70px;
+		}
+		.imagesList ul li.waiting{
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div class="carousel">
+		<div class="btns">
+			<a href="javascript:void(0);" class="btn1" id="btn1"></a>
+			<a href="javascript:void(0);" class="btn2" id="btn2"></a>
+		</div>
+		<div class="imagesList">
+			<ul>
+				<li class="no0"><a href="#"><img src="images/shuzi/0.png"/></a></li>
+				<li class="no1"><a href="#"><img src="images/shuzi/1.png"/></a></li>
+				<li class="no2"><a href="#"><img src="images/shuzi/2.png"/></a></li>
+				<li class="no3"><a href="#"><img src="images/shuzi/3.png"/></a></li>
+				<li class="no4"><a href="#"><img src="images/shuzi/4.png"/></a></li>
+				<li class="no5"><a href="#"><img src="images/shuzi/5.png"/></a></li>
+				<li class="no6"><a href="#"><img src="images/shuzi/6.png"/></a></li>
+				<li class="waiting"><a href="#"><img src="images/shuzi/7.png"/></a></li>
+				<li class="waiting"><a href="#"><img src="images/shuzi/8.png"/></a></li>
+				<li class="waiting"><a href="#"><img src="images/shuzi/9.png"/></a></li>
+				<li class="waiting"><a href="#"><img src="images/shuzi/10.png"/></a></li>
+			</ul>
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
+	<script type="text/javascript">
+		var $btn1 = $("#btn1");
+		var $btn2 = $("#btn2");
+
+		//我们设置一个JSON数组，第X项就存储.noX那个JSON
+		var JSONARR = (function(){
+			var temp = [];
+			//常量数组，这个数组里面的值不再变化。
+			//我们遍历7个$(".no0")、$("no1")……
+			//把这些li的left、top、width、height的JSON放入数组
+			for(var i = 0 ; i < 7 ; i++){
+				temp.push({
+					"left" 		:	$(".no" + i).css("left"),
+					"top" 		:	$(".no" + i).css("top"),
+					"width" 	:	$(".no" + i).css("width"),
+					"height" 	:	$(".no" + i).css("height")
+				});
+			}
+			return temp;
+		})();	
+
+		//类名数组
+		var classNameArr = (function(){
+			var temp = [];
+			$(".carousel li").each(function(){
+				temp.push($(this).attr("class"));
+			});
+			return temp;
+		})();
+			 
+			 
+		//右按钮的监听
+		$btn2.click(function(){
+			//防流氓
+			if($("li").is(":animated")){
+				return;
+			}
+			//让类名为noX的元素，运动到JSON[X-1]的那个位置去
+			for(var i = 1 ; i <= 6 ; i++){
+				$(".no" + i).animate(JSONARR[i - 1],300);
+			}
+			//让左边猫腻瞬移到右边
+			$(".no0").css(JSONARR[6]);
+
+			//pop，从数组尾部删除；unshift，从数组头部插入
+			//这条语句的意思是：把数字的最后一项挪到开头去。
+			classNameArr.unshift(classNameArr.pop());
+			//根据classNameArr数组，依次给每个li设置新的class。
+			//达到了“轮换”类名的效果。
+			$(".carousel li").each(function(i){
+				$(this).attr("class",classNameArr[i]);
+			})
+			 
+			//此时这个no6是刚刚由一个waiting变化的，而waiting的元素不能进行animate
+			//此时我们让这个no6瞬移过来
+			$(".no6").css(JSONARR[6]);
+		});
+
+		//左按钮的监听
+		$btn1.click(function(){
+			//防流氓
+			if($("li").is(":animated")){
+				return;
+			}
+			//让类名为noX的元素，运动到JSON[X-1]的那个位置去
+			for(var i = 0 ; i <= 5 ; i++){
+				$(".no" + i).animate(JSONARR[i + 1],300);
+			}
+			//让左边猫腻瞬移到右边
+			$(".no6").css(JSONARR[0]);
+
+			//pop，从数组尾部删除；unshift，从数组头部插入
+			//这条语句的意思是：把数字的最后一项挪到开头去。
+			classNameArr.push(classNameArr.shift());
+			//根据classNameArr数组，依次给每个li设置新的class。
+			//达到了“轮换”类名的效果。
+			$(".carousel li").each(function(i){
+				$(this).attr("class",classNameArr[i]);
+			})
+			//此时这个no0是刚刚由一个waiting变化的，而waiting的元素不能进行animate
+			//此时我们让这个no0瞬移过来
+			$(".no0").css(JSONARR[0]);
+		});
+	</script>
+</body>
+</html>
